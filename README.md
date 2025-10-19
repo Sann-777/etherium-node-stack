@@ -1,10 +1,6 @@
----
-
 # Ethereum Node Monitoring Infrastructure
 
 **A full-stack, containerized Ethereum Sepolia network monitoring setup demonstrating hands-on DevOps and blockchain infrastructure skills.**
-
----
 
 ## 🚀 Project Summary
 
