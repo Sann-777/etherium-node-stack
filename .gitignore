@@ -1,0 +1,24 @@
+# Docker data and volumes
+docker/data/
+docker/jwt/
+docker/*.log
+docker/*.pid
+
+# Docker Compose override files if local
+docker/docker-compose-*.override.yaml
+
+# Grafana storage & plugins
+monitoring/grafana/
+docker/grafana/
+
+# Node modules (if you ever have JS projects)
+node_modules/
+
+# Python virtual envs
+venv/
+__pycache__/
+
+# OS files
+.DS_Store
+*.swp
+

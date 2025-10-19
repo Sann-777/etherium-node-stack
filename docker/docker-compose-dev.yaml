@@ -1,0 +1,32 @@
+# docker-compose-dev.yaml
+version: '3.8'
+
+networks:
+  eth-network:
+    external: true
+
+services:
+  geth:
+    image: ethereum/client-go:stable
+    container_name: geth-dev-node
+    networks:
+      - eth-network
+    ports:
+      - "8545:8545"   # RPC
+      - "6060:6060"   # Metrics
+    volumes:
+      - ./data/geth-dev:/root/.ethereum
+    command: >
+      --dev
+      --http
+      --http.addr "0.0.0.0"
+      --http.api "eth,net,web3,txpool,admin,miner,debug,personal"
+      --ws
+      --ws.addr "0.0.0.0"
+      --ws.api "eth,net,web3,txpool,admin,debug,personal"
+      --allow-insecure-unlock
+      --http.corsdomain "*"
+      --dev.period 1
+      --metrics
+      --metrics.addr "0.0.0.0"
+      --metrics.port 6060

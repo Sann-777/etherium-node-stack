@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  prysm-beacon:
+    image: gcr.io/prysmaticlabs/prysm/beacon:stable
+    container_name: prysm-beacon
+    restart: unless-stopped
+    ports:
+      - "4000:4000" # Beacon API
+    volumes:
+      - ./data/prysm:/root/prysm
+    command: ["beacon-chain", "--http-web3provider=http://geth-node:8545"]
+    depends_on:
+      - geth-node
+
+  prysm-validator:
+    image: gcr.io/prysmaticlabs/prysm/validator:stable
+    container_name: prysm-validator
+    restart: unless-stopped
+    volumes:
+      - ./data/prysm-validator:/root/.eth2
+    depends_on:
+      - prysm-beacon

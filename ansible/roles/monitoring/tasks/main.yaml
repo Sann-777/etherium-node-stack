@@ -1,0 +1,9 @@
+- name: Ensure monitoring directory
+  file:
+    path: /opt/eth-auto-infra/monitoring
+    state: directory
+
+- name: Copy prometheus config
+  copy:
+    src: ../../monitoring/prometheus.yml
+    dest: /opt/eth-auto-infra/monitoring/prometheus.yml

@@ -1,0 +1,24 @@
+{
+ "dashboard": {
+  "title": "Ethereum Node Overview",
+  "panels": [
+   {
+    "type": "stat",
+    "title": "Block Number",
+    "targets": [
+     {
+      "expr": "go_memstats_alloc_bytes",
+      "legendFormat": "mem_alloc"
+     }
+    ],
+    "gridPos": {"h": 2, "w": 12, "x": 0, "y": 0}
+   },
+   {
+    "type": "graph",
+    "title": "CPU / Memory (Prometheus)",
+    "targets": [],
+    "gridPos": {"h": 6, "w": 12, "x": 0, "y": 2}
+   }
+  ]
+ }
+}

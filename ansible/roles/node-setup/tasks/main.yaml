@@ -1,0 +1,9 @@
+- name: Create data directories
+  file:
+    path: "/opt/eth-auto-infra/data/{{ item }}"
+    state: directory
+    owner: ubuntu
+  loop:
+    - geth
+    - prysm
+    - prysm-validator

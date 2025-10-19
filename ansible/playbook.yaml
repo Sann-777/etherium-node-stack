@@ -1,0 +1,49 @@
+- hosts: eth_nodes
+  become: yes
+  vars:
+    project_dir: /opt/eth-auto-infra
+  tasks:
+  - name: Ensure project directory exists
+    file:
+      path: "{{ project_dir }}"
+      state: direictory
+      owner: ubuntu
+      group: ubuntu
+      mode: '0755'
+
+  - name: Include role docker-install
+    import_role:
+      name: docker-install
+  - name: Copy docker-compose files
+    copy:
+      src: ../docker/
+      dest: "{{ project_dir }}/docker/"
+      owner: ubuntu
+      group: ubuntu
+      mode: '0755'
+
+  - name: Copy monitoring configs
+    copy:
+      src: ../monitoring/
+      dest: "{{ project_dir }}/monitoring/"
+      owner: ubuntu
+      group: ubuntu
+      mode: '0644'
+
+  - name: Start prometheus and grafana stack
+    shell: |
+      cd {{ project_dir }}/docker && docker compose -f docker-compose-grafana-prometheus.yml up -d
+    args:
+      warn: false
+
+  - name: Start geth node
+    shell: |
+      cd {{ project_dir }}/docker && docker compose -f docker-compose-geth.yml up -d
+    args:
+      warn: false
+
+  - name: Start prysm services (if present)
+    shell: |
+      cd {{ project_dir }}/docker && docker compose -f docker-compose-prysm.yml up -d || true
+    args:
+      warn: false

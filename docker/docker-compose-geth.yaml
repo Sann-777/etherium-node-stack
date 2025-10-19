@@ -1,0 +1,65 @@
+version: "3.8"
+
+networks:
+  eth-network:
+    external: true
+
+services:
+  geth:
+    image: ethereum/client-go:stable
+    container_name: geth-sepolia-node
+    restart: unless-stopped
+    command: >
+      --sepolia
+      --http
+      --http.addr 0.0.0.0
+      --http.vhosts=*
+      --http.api eth,net,web3,txpool,admin,debug,personal
+      --authrpc.addr 0.0.0.0
+      --authrpc.port 8551
+      --authrpc.vhosts=*
+      --authrpc.jwtsecret /jwt/jwtsecret
+      --syncmode snap
+      --metrics
+      --metrics.addr 0.0.0.0
+      --metrics.port 6060
+      --metrics.expensive
+    volumes:
+      - ./data/geth:/root/.ethereum
+      - ./jwt:/jwt
+    ports:
+      - "8545:8545"
+      - "8551:8551"
+      - "6060:6060"
+      - "30303:30303"
+      - "30303:30303/udp"
+    networks:
+      - eth-network
+
+  lighthouse:
+    image: sigp/lighthouse:latest
+    container_name: lighthouse-sepolia
+    restart: unless-stopped
+    command: >
+      lighthouse bn
+      --network sepolia
+      --execution-endpoint http://geth-sepolia-node:8551
+      --execution-jwt /jwt/jwtsecret
+      --checkpoint-sync-url https://sepolia.beaconstate.info
+      --metrics
+      --metrics-address 0.0.0.0
+      --metrics-port 5054
+      --http
+      --http-address 0.0.0.0
+      --disable-deposit-contract-sync
+    volumes:
+      - ./data/lighthouse:/root/.lighthouse
+      - ./jwt:/jwt
+    depends_on:
+      - geth
+    ports:
+      - "5052:5052"
+      - "5054:5054"
+    networks:
+      - eth-network
+
